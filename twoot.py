@@ -18,7 +18,7 @@ tweet_api = tweepy.API(auth)
 
 
 mastodon = Mastodon(
-    access_token = 'access_token'
+    access_token = 'access_token',
     api_base_url = 'URL of the mastodon instance'
 )
 #mastodon.toot('Tooting from python using #mastodonpy !')
@@ -27,17 +27,15 @@ clear = "clear"
 os.system(clear)
 print("\n")
 #text = input()
-
+print("Enter/Paste your content. Ctrl-D or Ctrl-Z ( windows ) to post it.")
 lines = []
 while True:
     try:
-        text =input()
-        if text:
-            lines.append(text)
-        else:
-            break
+        text = input()
     except EOFError:
         break
+    if text.strip():
+        lines.append(text)
 
 
 user_input = '\n'.join(lines)    
