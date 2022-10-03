@@ -7,12 +7,6 @@ A python script to send a given text to twitter as tweet and mastodon as toot.
 - Run it as `python3 twoot.py`
 
 
-# TODO
-
-- Currently it is not accepting multiline text as input. Have to improve it to post multiline content
-- if charecter count is > 280, it wont publish. Make it to publish as a thread, if length > 280
-
-
 # Using with emacs
 
 I have a cruid hack way to use the same with emacs.
