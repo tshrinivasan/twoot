@@ -5,6 +5,9 @@ import tweepy
 import os
 from mastodon import Mastodon
 
+twitter_max_char = 280
+mastodon_max_char = 5000
+
 # Authenticate to Twitter
 auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
 auth.set_access_token(key,secret)
@@ -38,19 +41,44 @@ while True:
         lines.append(text)
 
 
-user_input = '\n'.join(lines)    
+user_input = '\n'.join(lines)
 
-print(len(user_input))
+def splitWordsBySize(word, maxLength):
+    if len(word) < maxLength:
+        words.append(word)
+        return words;
+    # Take first max length word
+    tempWord = word[0:maxLength]
+    # Split the word with space to get last word
+    lis = tempWord.split(" ")
+    lastWordIndex = len(lis) - 1
+    nextWord = lis[0:lastWordIndex][0];
+    words.append(nextWord)
+    remaingingWord = word[len(nextWord):].strip()
+    return splitWordsBySize(remaingingWord, maxLength) 
 
-if len(user_input)>280:
-    print("text length > 280. Exiting")
-    sys.exit()
+# For twitter
+words = [];
+tweet_messages = splitWordsBySize(user_input, twitter_max_char);
+tweet_response = ''
+for x in range(0, len(tweet_messages)):
+    tweet_response = tweet_api.update_status(tweet_messages[x], in_reply_to_status_id = tweet_response)
 
-else:
-    tweet_api.update_status(user_input)
-    mastodon.toot(user_input)
-    print(user_input)
-    print("Sent Toot and Tweet !")
+print("Sent Tweet !")
+
+# For mastodon
+words = [];
+mastodon_messages = splitWordsBySize(user_input, mastodon_max_char);
+mastodon_response = None
+for x in range(0, len(mastodon_messages)):
+    if mastodon_response is not None:
+        mastodon_response = mastodon.status_post(mastodon_messages[x], in_reply_to_id = mastodon_response)
+    else:
+        mastodon_response = mastodon.toot(mastodon_messages[x])
+print("Sent Toot !")
+
+
+
     
 
 # links
